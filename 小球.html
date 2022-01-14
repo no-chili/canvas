@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小球</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.querySelector('canvas')
+        const ctx = canvas.getContext('2d')
+        var dr
+        var running = false
+
+        // 绘制一个球
+        const ball = {
+            x: 400,
+            y: 300,
+            vx: 5,
+            vy: 2,
+            radius: 25,
+            color: 'skyblue',
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true)
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        // 匀速动画
+        function draw() {
+
+            // 边界判断
+            if (ball.x + ball.vx > canvas.width || ball.x + ball.vx < 0) {
+                ball.vx = -ball.vx
+            }
+            if (ball.y + ball.vy > canvas.height || ball.y + ball.vy < 0) {
+                ball.vy = -ball.vy
+            }
+
+            // 拖尾
+            ctx.fillStyle = 'rgba(255,255,255,0.3)'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+            ball.draw();
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+
+            // 速度变化
+            ball.vy *= 0.99
+            ball.vy += 0.25
+            dr = window.requestAnimationFrame(draw)
+        }
+
+        function clear() {
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 第一帧
+        ball.draw()
+
+
+        canvas.addEventListener('click', function(e) {
+            if (!running) {
+                dr = window.requestAnimationFrame(draw)
+                running = true
+            }
+        })
+
+
+
+        canvas.addEventListener('mousemove', function(e) {
+            if (!running) {
+                clear();
+                ball.x = e.offsetX;
+                ball.y = e.offsetY;
+                ball.draw();
+            }
+        });
+
+
+        canvas.addEventListener('mouseout', function() {
+            window.cancelAnimationFrame(dr)
+            running = false;
+        })
+
+
+
+
+
+
+
+        ball.draw()
+    </script>
+</body>
+
+</html>

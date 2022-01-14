@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时钟</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+        function drawClock() {
+            var cvsCtx = document.getElementById('canvas').getContext('2d');
+            cvsCtx.save();
+            // 移动原点
+            cvsCtx.clearRect(0, 0, 800, 600);
+            cvsCtx.translate(400, 300);
+
+            // 逆时针选择90度
+            cvsCtx.rotate(-90 * Math.PI / 180);
+
+            cvsCtx.save()
+                // 绘制圆
+            cvsCtx.beginPath();
+            cvsCtx.strokeStyle = "#666";
+            cvsCtx.lineWidth = 10;
+            cvsCtx.arc(0, 0, 200, 0, Math.PI * 2, false);
+            cvsCtx.closePath();
+            cvsCtx.stroke();
+            cvsCtx.restore();
+
+            // 绘制刻度
+            cvsCtx.save();
+            for (var i = 0; i < 4; i++) {
+                cvsCtx.rotate(90 * Math.PI / 180);
+                cvsCtx.beginPath();
+                cvsCtx.strokeStyle = "#333";
+                cvsCtx.lineWidth = 6;
+                cvsCtx.moveTo(170, 0);
+                cvsCtx.lineTo(190, 0);
+                cvsCtx.closePath();
+                cvsCtx.stroke();
+            }
+            cvsCtx.restore();
+
+            var time = new Date()
+            var houer = time.getHours() % 12
+            var min = time.getMinutes()
+            var sec = time.getSeconds()
+                // console.log(houer + ':' + min + ":" + sec);
+
+            // 绘制时针
+            cvsCtx.save();
+            cvsCtx.beginPath();
+            cvsCtx.rotate(houer * 30 * Math.PI / 180);
+            cvsCtx.moveTo(-10, 0);
+            cvsCtx.lineTo(80, 0);
+            cvsCtx.strokeStyle = "red";
+            cvsCtx.lineWidth = 8;
+            cvsCtx.stroke();
+            cvsCtx.restore();
+
+            // 绘制分针
+            cvsCtx.save();
+            cvsCtx.beginPath();
+            cvsCtx.rotate(min * 6 * Math.PI / 180);
+            cvsCtx.moveTo(-10, 0);
+            cvsCtx.lineTo(80, 0);
+            cvsCtx.strokeStyle = "blue";
+            cvsCtx.lineWidth = 5;
+            cvsCtx.stroke();
+            cvsCtx.restore();
+
+            // 绘制秒针
+            cvsCtx.save();
+            cvsCtx.beginPath();
+            cvsCtx.rotate(sec * 6 * Math.PI / 180);
+            cvsCtx.moveTo(-10, 0);
+            cvsCtx.lineTo(110, 0);
+            cvsCtx.strokeStyle = "black";
+            cvsCtx.lineWidth = 3;
+            cvsCtx.stroke();
+            cvsCtx.restore();
+
+            cvsCtx.restore();
+
+
+            window.requestAnimationFrame(drawClock);
+        }
+
+        window.requestAnimationFrame(drawClock);
+    </script>
+</body>
+
+</html>

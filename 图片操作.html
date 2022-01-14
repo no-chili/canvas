@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片操作</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas')
+        let x;
+        let y;
+        let w;
+        let h;
+
+        // 图上作画
+        function draw() {
+            const ctx = document.getElementById('canvas').getContext('2d')
+            const image = new Image()
+
+            //在这里面操作图片 
+            image.onload = function() {
+                canvas.width = image.width / 4
+                canvas.height = image.height / 4
+
+                // 在canvas中画出一张图片
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height); //原点开始画一张图片
+                // 开始绘制canvas
+                ctx.beginPath();
+                ctx.moveTo(30, 96);
+                ctx.lineTo(70, 66);
+                ctx.lineTo(103, 76);
+                ctx.lineTo(170, 15);
+                ctx.stroke();
+            }
+            image.src = './image/1.png'
+        }
+
+        // 图片切片
+        function slic() {
+
+            const ctx = document.getElementById('canvas').getContext('2d')
+            const image = new Image()
+
+            //在这里面操作图片 
+            image.onload = function() {
+                let sourceWidth = image.width
+                let sourceHeight = image.height
+
+                // 在canvas中画出一张图片
+                ctx.drawImage(image, sourceWidth / 2, sourceHeight / 2, sourceWidth / 2, sourceHeight / 2, 0, 0, 200, 200); //自原图像的中心点取四分之一，在canvas的0，0绘制一张200，200的图片
+            }
+            image.src = './image/1.png'
+        }
+
+        // 图片切片实现图片放大功能
+        function slicImage(x, y, w, h) {
+            const ctx = document.getElementById('canvas').getContext('2d')
+            const image = new Image()
+            image.onload = function() {
+                ctx.drawImage(image, x * image.width, y * image.height, w * image.width, h * image.height, 0, 0, 800, 600);
+            }
+            image.src = './image/1.png'
+        }
+
+        canvas.addEventListener('mousedown', function(e) {
+            x = e.offsetX / canvas.width;
+            y = e.offsetY / canvas.height;
+        })
+
+        canvas.addEventListener('mouseup', function(e) {
+            w = e.offsetX / canvas.width - x;
+            h = e.offsetY / canvas.height - y;
+            slicImage(x, y, w, h)
+        })
+
+
+        draw()
+    </script>
+</body>
+
+</html>
