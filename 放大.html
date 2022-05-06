@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>放大</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.querySelector('#canvas')
+        const context = canvas.getContext('2d');
+        const MaxSize = 4
+        const MinSize = 0.5
+        let size = 1
+
+        const img = new Image()
+        img.src = './image/2.jpg'
+        let imageW
+        let imageH
+
+        // 加载进一张画,初始化
+        img.onload = function() {
+            imageW = img.width
+            imageH = img.height
+            canvas.width = img.width
+            canvas.height = img.height
+            context.drawImage(img, 0, 0, imageW, imageH);
+        }
+
+        // 修改图片
+        function adjust(size) {
+            context.clearRect(0, 0, imageW, imageH);
+            // 二分之一画布减去二分之一图片
+            context.drawImage(img, canvas.width / 2 - size * imageW / 2, canvas.height / 2 - imageH * size / 2, imageW * size, imageH * size);
+        }
+
+        canvas.addEventListener('mousewheel', function(e) {
+            if (size + e.wheelDelta / 1000 < MaxSize && size + e.wheelDelta / 1000 > MinSize) {
+                size += e.wheelDelta / 1000
+            }
+            adjust(size)
+        })
+    </script>
+</body>
+
+</html>
